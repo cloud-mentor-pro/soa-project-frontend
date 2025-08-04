@@ -1,10 +1,10 @@
 # 🎯 CodeLand.io - ReactJS Code Exercise Platform
 
-![](docs\img\banner.png)
+![](./docs/img/banner.png)
 
 # Nền tảng học lập trình tương tác được xây dựng với React, TypeScript và Chakra UI. Hệ thống quản lý bài tập lập trình với giao diện hiện đại và tính năng đầy đủ.
 
-![](docs\img\codelandio.PNG)
+![](./docs/img/codelandio.PNG)
 
 ## 🚀 Công Nghệ Sử Dụng
 
