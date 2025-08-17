@@ -1,11 +1,11 @@
 # Development Dockerfile with hot reload
-FROM node:20-alpine
+FROM node:22.18.0-bookworm
 
 # Set working directory
 WORKDIR /app
 
 # Install dependencies for development
-RUN apk add --no-cache curl
+RUN apt install curl
 
 # Copy package files
 COPY package.json package-lock.json* ./
@@ -20,6 +20,7 @@ COPY . .
 ARG VITE_API_URL
 ARG VITE_APP_TITLE
 ARG VITE_APP_ENV
+
 
 # Set environment variables
 ENV VITE_API_URL=${VITE_API_URL}
