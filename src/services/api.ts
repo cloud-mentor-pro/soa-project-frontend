@@ -1,7 +1,8 @@
 // Base API client cho CodeLand.io platform
 
 // Lấy API URL từ environment variables
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+// const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_BASE_URL = 'http://soa-alb-codeland-codeland-api-1138187373.us-east-1.elb.amazonaws.com'
 
 // Custom error class cho API errors
 export class ApiError extends Error {
