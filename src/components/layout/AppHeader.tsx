@@ -5,7 +5,7 @@ import {
   Heading,
   Button,
   Text,
-  Avatar,
+
   HStack,
   IconButton,
   Collapse,
@@ -24,10 +24,13 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { FiChevronDown, FiMenu, FiX } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
+import { OptimizedAvatar } from '../common/OptimizedImage';
+import { useProfileImageUrl } from '../../hooks/useProfileImage';
 
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout, isLogoutLoading } = useAuth();
+  const { profileImageUrl } = useProfileImageUrl(user);
   const { isOpen, onToggle } = useDisclosure();
   
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -103,7 +106,11 @@ const AppHeader: React.FC = () => {
               <Menu>
                 <MenuButton as={Button} variant="ghost" size="sm" rightIcon={<FiChevronDown />}>
                   <HStack spacing={2}>
-                    <Avatar size="xs" name={user.username} />
+                    <OptimizedAvatar 
+                      size="xs" 
+                      name={user.username}
+                      profileImageUrl={profileImageUrl}
+                    />
                     <Text fontSize="sm">{user.username}</Text>
                   </HStack>
                 </MenuButton>
@@ -206,7 +213,11 @@ const AppHeader: React.FC = () => {
               {isAuthenticated && user ? (
                 <VStack spacing={3} align="stretch" pt={2}>
                   <HStack spacing={3} pb={2}>
-                    <Avatar size="sm" name={user.username} />
+                    <OptimizedAvatar 
+                    size="xs" 
+                    name={user.username}
+                    profileImageUrl={profileImageUrl}
+                  />
                     <Text fontSize="md" fontWeight="medium">
                       {user.username}
                     </Text>

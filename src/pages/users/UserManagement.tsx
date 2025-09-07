@@ -43,6 +43,7 @@ import { AddUserModal } from '../../components/users/AddUserModal';
 import { EditUserModal } from '../../components/users/EditUserModal';
 import { UserDetailModal } from '../../components/users/UserDetailModal';
 import { DeleteUserModal } from '../../components/users/DeleteUserModal';
+import { OptimizedAvatar } from '../../components/common/OptimizedImage';
 import type { User } from '../../types/api';
 
 const ITEMS_PER_PAGE = 10;
@@ -304,6 +305,7 @@ const UserManagement: React.FC = () => {
                       <Thead bg="gray.50" _dark={{ bg: 'gray.700' }}>
                         <Tr>
                           <Th>ID</Th>
+                          <Th>Avatar</Th>
                           <Th>Tên người dùng</Th>
                           <Th>Email</Th>
                           <Th>Trạng thái</Th>
@@ -315,6 +317,13 @@ const UserManagement: React.FC = () => {
                         {currentUsers.map((user) => (
                           <Tr key={user.id} _hover={{ bg: 'gray.50', _dark: { bg: 'gray.700' } }}>
                             <Td fontWeight="medium">{user.id}</Td>
+                            <Td>
+                              <OptimizedAvatar
+                                size="sm"
+                                name={user.username}
+                                profileImageUrl={user.profile_image_url}
+                              />
+                            </Td>
                             <Td fontWeight="medium">{user.username}</Td>
                             <Td>{user.email}</Td>
                             <Td>

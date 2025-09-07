@@ -25,6 +25,8 @@ import {
 import { useUser } from '../../hooks/queries/useUserQueries';
 import { useScores } from '../../hooks/queries/useScoreQueries';
 import type { Score } from '../../types/api';
+import { ProfileImageUpload } from './ProfileImageUpload';
+import { useAuth } from '../../hooks/useAuth';
 
 interface UserDetailModalProps {
   isOpen: boolean;
@@ -39,6 +41,7 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
 }) => {
   const { data: user, isLoading: userLoading, error: userError } = useUser(userId || 0);
   const { data: allScores } = useScores();
+  const { user: currentUser } = useAuth();
 
   // Lấy scores của user (nếu có)
   const userScores = React.useMemo(() => {
@@ -94,6 +97,19 @@ export const UserDetailModal: React.FC<UserDetailModalProps> = ({
             </Alert>
           ) : user ? (
             <VStack spacing={6} align="stretch">
+              {/* Profile Image */}
+              <Box textAlign="center">
+                <ProfileImageUpload
+                  user={user}
+                  canEdit={currentUser?.admin || currentUser?.id === user.id}
+                  size="lg"
+                  onImageUpdate={() => {
+                    // Refresh user data
+                    window.location.reload();
+                  }}
+                />
+              </Box>
+
               {/* Thông tin cơ bản */}
               <Box>
                 <Text fontSize="lg" fontWeight="bold" mb={3}>

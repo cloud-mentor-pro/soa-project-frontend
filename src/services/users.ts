@@ -8,6 +8,8 @@ import type {
   UserResponse,
   SuccessResponse,
   PingResponse,
+  ProfileImageUploadResponse,
+  ProfileImageResponse,
 } from '../types/api';
 
 export class UserService {
@@ -267,6 +269,97 @@ export class UserService {
     }
 
     return { score, feedback };
+  }
+
+  // Upload profile image cho user
+  async uploadProfileImage(userId: number, imageFile: File): Promise<ProfileImageUploadResponse> {
+    try {
+      // Validate file trước khi upload
+      const validation = this.validateImageFile(imageFile);
+      if (!validation.isValid) {
+        throw new ApiError(400, validation.errors.join(', '));
+      }
+
+      // Tạo FormData để gửi file
+      const formData = new FormData();
+      formData.append('profile_image', imageFile);
+
+      return await apiClient.postFile<ProfileImageUploadResponse>(`/users/${userId}/profile-image`, formData, true);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 403) {
+          throw new ApiError(403, 'Bạn không có quyền upload ảnh cho người dùng này');
+        }
+        if (error.status === 404) {
+          throw new ApiError(404, 'Không tìm thấy người dùng');
+        }
+        throw error;
+      }
+      throw new ApiError(500, 'Không thể upload ảnh đại diện');
+    }
+  }
+
+  // Lấy URL ảnh đại diện của user
+  async getProfileImageUrl(userId: number): Promise<ProfileImageResponse> {
+    try {
+      return await apiClient.get<ProfileImageResponse>(`/users/${userId}/profile-image`, true);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 404) {
+          throw new ApiError(404, 'Người dùng chưa có ảnh đại diện');
+        }
+        if (error.status === 403) {
+          throw new ApiError(403, 'Bạn không có quyền xem ảnh của người dùng này');
+        }
+        throw error;
+      }
+      throw new ApiError(500, 'Không thể lấy ảnh đại diện');
+    }
+  }
+
+  // Xóa ảnh đại diện của user
+  async deleteProfileImage(userId: number): Promise<SuccessResponse> {
+    try {
+      return await apiClient.delete<SuccessResponse>(`/users/${userId}/profile-image`, true);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 404) {
+          throw new ApiError(404, 'Không tìm thấy người dùng');
+        }
+        if (error.status === 403) {
+          throw new ApiError(403, 'Bạn không có quyền xóa ảnh của người dùng này');
+        }
+        throw error;
+      }
+      throw new ApiError(500, 'Không thể xóa ảnh đại diện');
+    }
+  }
+
+  // Validate image file trước khi upload
+  validateImageFile(file: File): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
+
+    // Kiểm tra file type
+    if (!allowedTypes.includes(file.type)) {
+      errors.push('Chỉ chấp nhận file ảnh định dạng PNG, JPG, JPEG hoặc GIF');
+    }
+
+    // Kiểm tra file size
+    if (file.size > maxSizeInBytes) {
+      errors.push('Kích thước file không được vượt quá 5MB');
+    }
+
+    // Kiểm tra file có tồn tại
+    if (!file || file.size === 0) {
+      errors.push('Vui lòng chọn file ảnh hợp lệ');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
   }
 }
 

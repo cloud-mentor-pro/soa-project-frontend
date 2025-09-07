@@ -112,6 +112,7 @@ export const preloadImage = (src: string, options: ImageOptions = {}): Promise<s
     }
 
     const img = new Image();
+    img.crossOrigin = 'anonymous'; // Enable CORS for canvas operations
     const optimizedSrc = getOptimizedImageUrl(src, options);
 
     img.onload = () => {
@@ -129,18 +130,24 @@ export const preloadImage = (src: string, options: ImageOptions = {}): Promise<s
 
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      // Convert to optimized format
-      const quality = (options.quality || 80) / 100;
-      const dataUrl = canvas.toDataURL(`image/${options.format || 'webp'}`, quality);
+      try {
+        // Convert to optimized format
+        const quality = (options.quality || 80) / 100;
+        const dataUrl = canvas.toDataURL(`image/${options.format || 'webp'}`, quality);
 
-      // Cache the result
-      imageCache.set(src, {
-        src: optimizedSrc,
-        timestamp: Date.now(),
-        dataUrl
-      });
+        // Cache the result
+        imageCache.set(src, {
+          src: optimizedSrc,
+          timestamp: Date.now(),
+          dataUrl
+        });
 
-      resolve(dataUrl);
+        resolve(dataUrl);
+      } catch (error) {
+        // If canvas is tainted (CORS issue), fall back to original src
+        console.warn('Canvas tainted, falling back to original image:', error);
+        resolve(optimizedSrc);
+      }
     };
 
     img.onerror = () => {

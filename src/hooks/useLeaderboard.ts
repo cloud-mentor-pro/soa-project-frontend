@@ -117,7 +117,7 @@ const calculateLeaderboard = (users: User[], scores: Score[], exercises: Exercis
       id: user.id.toString(),
       name: user.username, // Fix: use username instead of name
       email: user.email,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&size=150&background=random`, // Generate avatar
+      avatar: user.profile_image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&size=150&background=random`, // Use profile image or generate avatar
       totalScore: Math.floor(totalScore),
       completedExercises,
       rank: 0, // Will be set after sorting

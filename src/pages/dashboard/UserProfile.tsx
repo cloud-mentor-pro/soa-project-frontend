@@ -9,7 +9,7 @@ import {
   Badge,
   VStack,
   HStack,
-  Avatar,
+
   Button,
   Grid,
   GridItem,
@@ -36,6 +36,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { useUserStatistics } from '../../hooks/queries/useScoreQueries';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { ProfileImageUpload } from '../../components/users/ProfileImageUpload';
+
 
 const UserProfile: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -126,15 +128,19 @@ const UserProfile: React.FC = () => {
                 <Card bg={cardBg} borderColor={borderColor}>
                   <CardBody>
                     <VStack spacing={6} align="stretch">
-                      {/* Avatar and basic info */}
-                      <HStack spacing={4}>
-                        <Avatar 
-                          size="xl" 
-                          name={user.username}
-                          bg="blue.500"
-                          color="white"
+                      {/* Profile Image and basic info */}
+                      <VStack spacing={4}>
+                        <ProfileImageUpload
+                          user={user}
+                          canEdit={true}
+                          size="2xl"
+                          onImageUpdate={(_newImageUrl) => {
+                            // This would typically update the user state
+                            // For now, we'll just refresh to show the updated image
+                            window.location.reload();
+                          }}
                         />
-                        <VStack align="start" spacing={2}>
+                        <VStack align="center" spacing={2}>
                           <Heading size="lg">{user.username}</Heading>
                           <Text color="gray.600" _dark={{ color: 'gray.400' }} fontSize="md">
                             {user.email}
@@ -155,7 +161,7 @@ const UserProfile: React.FC = () => {
                             )}
                           </HStack>
                         </VStack>
-                      </HStack>
+                      </VStack>
 
                       <Divider />
 

@@ -189,19 +189,34 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 };
 
 /**
- * Avatar component với optimization
+ * Avatar component với optimization và hỗ trợ profile_image_url
  */
-export const OptimizedAvatar: React.FC<OptimizedImageProps & {
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export const OptimizedAvatar: React.FC<Partial<OptimizedImageProps> & {
+  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   name?: string;
+  profileImageUrl?: string | null;
 }> = ({
   size = 'md',
   name,
-  ...props
+  profileImageUrl,
+  style,
+  // Extract props that should not be passed to Image component
+  sizes,
+  responsiveWidths,
+  quality,
+  format,
+  lazy,
+  placeholder,
+  fallback,
+  onLoad,
+  onError,
+  priority,
+  ...imageProps
 }) => {
   const sizeMap = {
-    xs: 24,
-    sm: 32,
+    '2xs': 20, // Tăng từ 16 lên 20 để rõ hơn
+    xs: 28,    // Tăng từ 24 lên 28
+    sm: 36,    // Tăng từ 32 lên 36
     md: 48,
     lg: 64,
     xl: 96,
@@ -210,18 +225,39 @@ export const OptimizedAvatar: React.FC<OptimizedImageProps & {
 
   const avatarSize = sizeMap[size];
 
+  // Sử dụng profile_image_url nếu có, nếu không thì fallback về generated avatar
+  const imageSrc = profileImageUrl || imageProps.src || `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'User')}&size=${avatarSize}&background=random`;
+  const fallbackSrc = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'User')}&size=${avatarSize}&background=random`;
+  const altText = imageProps.alt || `Avatar for ${name || 'User'}`;
+
   return (
-    <OptimizedImage
-      {...props}
-      width={avatarSize}
-      height={avatarSize}
-      quality={90}
-      style={{
-        borderRadius: '50%',
-        ...props.style
-      }}
-      fallback={`https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'User')}&size=${avatarSize}&background=random`}
-    />
+    <Box
+      width={`${avatarSize}px`}
+      height={`${avatarSize}px`}
+      minWidth={`${avatarSize}px`} // Đảm bảo không bị co lại
+      minHeight={`${avatarSize}px`}
+      borderRadius="50%"
+      overflow="hidden"
+      flexShrink={0}
+      display="inline-block"
+      position="relative"
+      bg="gray.200"
+      style={style}
+    >
+      <Image
+        src={imageSrc}
+        alt={altText}
+        width="100%"
+        height="100%"
+        objectFit="cover"
+        fallbackSrc={fallbackSrc}
+        loading="lazy"
+        position="absolute"
+        top="0"
+        left="0"
+        {...imageProps}
+      />
+    </Box>
   );
 };
 

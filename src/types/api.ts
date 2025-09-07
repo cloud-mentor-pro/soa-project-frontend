@@ -34,6 +34,9 @@ export interface User {
   email: string;
   active: boolean;
   admin: boolean;
+  profile_image_url?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface UserRegistration {
@@ -53,6 +56,23 @@ export interface AdminUserCreate {
 export interface UserLogin {
   email: string;
   password: string;
+}
+
+// Profile image related types
+export interface ProfileImageUploadResponse {
+  status: string;
+  message: string;
+  data: {
+    profile_image_url: string;
+  };
+}
+
+export interface ProfileImageResponse {
+  status: string;
+  message: string;
+  data: {
+    profile_image_url: string;
+  };
 }
 
 // Exercise-related types

@@ -169,7 +169,7 @@ const PodiumTop3: React.FC<{ users: LeaderboardUser[] }> = ({ users }) => {
                   <Box position="relative">
                     <Avatar
                       size="xl"
-                      src={user.avatar}
+                      src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=150&background=random`}
                       name={user.name}
                       border="4px solid"
                       borderColor={config.iconColor}
@@ -316,7 +316,7 @@ const LeaderboardTable: React.FC<{ users: LeaderboardUser[] }> = ({ users }) => 
                   
                   <Avatar
                     size="md"
-                    src={user.avatar}
+                    src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=150&background=random`}
                     name={user.name}
                   />
                   

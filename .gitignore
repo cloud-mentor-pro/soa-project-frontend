@@ -25,6 +25,7 @@ dist-ssr
 *.kiro
 .clinerules
 .serena
+.claude
 CLAUDE.md
 
 # env

@@ -178,6 +178,38 @@ class ApiClient {
     }
   }
 
+  // POST request with file upload (multipart/form-data)
+  async postFile<T>(
+    endpoint: string,
+    formData: FormData,
+    requireAuth: boolean = false
+  ): Promise<T> {
+    try {
+      // Tạo headers nhưng không set Content-Type cho FormData (browser sẽ tự động set)
+      const headers: HeadersInit = {};
+      
+      if (requireAuth) {
+        const token = this.getAuthToken();
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+      }
+
+      const response = await fetch(`${this.baseURL}${endpoint}`, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      return this.handleResponse<T>(response);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(0, 'Không thể kết nối đến server');
+    }
+  }
+
   // PUT request
   async put<T>(
     endpoint: string,
