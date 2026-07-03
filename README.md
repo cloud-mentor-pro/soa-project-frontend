@@ -81,8 +81,8 @@ src/
 
 #### 1. Clone Repository
 ```bash
-git clone https://github.com/longngo192/soa-final-project-frontend
-cd soa-final-project-frontend
+git clone https://github.com/cloud-mentor-pro/soa-project-frontend
+cd soa-project-frontend
 ```
 
 #### 2. Cài Đặt Dependencies
@@ -134,8 +134,8 @@ npm run test:watch
 
 #### 1. Clone và Setup
 ```bash
-git clone https://github.com/longngo192/soa-final-project-frontend
-cd codeland-frontend
+git clone https://github.com/cloud-mentor-pro/soa-project-frontend
+cd soa-project-frontend
 
 # Copy environment template
 cp .env.example .env
